@@ -1,6 +1,7 @@
+"use client";
+
 import { Star } from "lucide-react";
-// import { Link } from "react-router-dom";
-import DogImage from "../assets/goldenRetriever.png";
+// import Image from 'next/image';
 
 type Movie = {
   id: number;
@@ -8,90 +9,44 @@ type Movie = {
   poster_path: string;
   vote_average: number;
   release_date: string;
+  genre: string; // ← added for subtitle (matches screenshot)
 };
 
-const mockMovies: Movie[] = [
-  {
-    id: 1,
-    title: "Interstellar",
-    poster_path: "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-    vote_average: 8.6,
-    release_date: "2014-11-07",
-  },
-  {
-    id: 2,
-    title: "Inception",
-    poster_path: "/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
-    vote_average: 8.8,
-    release_date: "2010-07-16",
-  },
-  {
-    id: 3,
-    title: "The Dark Knight",
-    poster_path: "/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-    vote_average: 9.04,
-    release_date: "2008-07-18",
-  },
-  {
-    id: 4,
-    title: "Dune",
-    poster_path: "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
-    vote_average: 8.1,
-    release_date: "2021-10-22",
-  },
-  {
-    id: 4,
-    title: "Dune",
-    poster_path: "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
-    vote_average: 8.1,
-    release_date: "2021-10-22",
-  },
-  {
-    id: 4,
-    title: "Dune",
-    poster_path: "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
-    vote_average: 8.1,
-    release_date: "2021-10-22",
-  },
-  {
-    id: 4,
-    title: "Dune",
-    poster_path: "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
-    vote_average: 8.1,
-    release_date: "2021-10-22",
-  },
-];
+interface MovieCardProps {
+  movie: Movie;
+}
 
-export default function MovieCard() {
+export default function MovieCard({ movie }: MovieCardProps) {
+  const year = movie.release_date.split("-")[0];
+
   return (
-    <div className="p-6">
-      {/* Grid */}
-      <div className="flex gap-6">
-        {mockMovies.map((movie) => {
-          return (
-            <div className="space-y-3">
-              <div className="relative h-71.25 w-47.5 p-5 rounded-xl overflow-hidden bg-[#2B5049] border border-white/10 hover:border-white/20 transition">
-                <img
-                  src={DogImage}
-                  alt={movie.title}
-                  className="w-full h-full object-fit group-hover:scale-105 transition duration-300"
-                />
-                <div className="flex items-center  gap-1 backdrop-blur-md rounded-[5px] absolute top-2 h-6 right-2 px-5 py-4 ">
-                  <Star className="w-3 h-3 text-[#FACC15] " />
-                  <p className="text-white font-bold">{movie.vote_average.toFixed(1)}</p>
-                </div>
-              </div>
-              <div className="">
-                <h3 className="text-white text-sm font-bold">
-                  {movie.title}
-                </h3>
-                <p className="text-[#94A3B8] text-[13px] ">
-                  {movie.release_date.split('-')[0]} • {movie.title}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+    <div className="group cursor-pointer">
+      {/* Poster Container */}
+
+      <div className="relative aspect-2/3 w-full p-5  rounded-xl overflow-hidden bg-[#0F2026] border border-white/10 hover:border-white/20 transition">
+        <img
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          alt={movie.title}
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+        />
+
+        {/* Rating Badge - top right (exactly like screenshot) */}
+        <div className="flex items-center  gap-1 backdrop-blur-md rounded-[5px] absolute top-2  h-6 right-2 px-5 py-4 ">
+          <Star className="w-3 h-3 text-[#FACC15] " />
+          <p className="text-white text-[10px] font-bold">
+            {movie.vote_average.toFixed(1)}
+          </p>
+        </div>
+      </div>
+      {/* Info below poster */}
+      <div className="mt-3 px-1">
+        <h3 className="text-white text-sm font-semibold line-clamp-2 group-hover:text-blue-400 transition-colors">
+          {movie.title}
+        </h3>
+        <p className="text-[#94A3B8] text-[13px] mt-1">
+          {year} • {movie.genre}
+        </p>
       </div>
     </div>
   );
