@@ -1,23 +1,41 @@
-import NavBar from "@/components/NavBar";
 import MovieCard from "@/components/MovieCard";
 import HeroBanner from "@/components/HeroBanner";
 import FilterBar from "@/components/FilterBar";
 import { useState } from "react";
 import { mockMovies, type Movie } from "@/data/mockMovies";
+import Loader from "@/components/Loader";
+import Pagination from "@/components/Pagination";
 
 export default function HomePage() {
   const [filters, setFilters] = useState({
-    genre: "All Genres",
-    year: "2024",
-    rating: "8.0+",
-    sort: "Popularity",
+    genre: 'All Genres',
+    year: '2024',
+    rating: '8.0+',
+    sort: 'Popularity',
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
   const displayedMovies = mockMovies;
+
+  const totalPages = 12; 
+
+  // Handle page change 
+  const handlePageChange = (page: number) => {
+    setIsLoading(true);
+    setCurrentPage(page);
+
+    // Simulate API delay (remove this when you connect real TMDB)
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+  };
+  // const displayedMovies = mockMovies;
   return (
     <div>
-      <NavBar />
       <div className="p-4">
-      <HeroBanner />
+        <HeroBanner />
         <FilterBar onFiltersChange={setFilters} />
         <div className="px-8 py-6 max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -29,7 +47,7 @@ export default function HomePage() {
               className="text-blue-400  flex items-center gap-1 text-sm"
             >
               <span className="hover:underline">View All</span>
-            <span className="text-xl  leading-none">→</span>
+              <span className="text-xl  leading-none">→</span>
             </a>
           </div>
 
@@ -39,6 +57,14 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+        {isLoading && <Loader />}
+
+        {/* PAGINATION */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
