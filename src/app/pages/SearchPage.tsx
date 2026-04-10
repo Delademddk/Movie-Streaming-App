@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import FilterSidebar from '@/components/FilterSidebar';
 import MovieCard from '@/components/MovieCard';
@@ -7,7 +5,7 @@ import Pagination from '@/components/Pagination';
 import { mockMovies, type Movie } from '@/data/mockMovies';
 
 interface SearchPageProps {
-  query: string;          // ← New prop from navbar
+  query: string;         
 }
 
 export default function SearchPage({ query }: SearchPageProps) {
@@ -20,7 +18,6 @@ export default function SearchPage({ query }: SearchPageProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  // TODO: Later we will filter by `query` + filters
   const displayedMovies = mockMovies.slice(0, 8);
 
   const totalPages = 12;
@@ -32,7 +29,7 @@ export default function SearchPage({ query }: SearchPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="min-h-screen  text-white">
       <div className="max-w-screen-2xl mx-auto px-4 md:px-8 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-zinc-400 mb-4">

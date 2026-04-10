@@ -22,8 +22,6 @@ export default function NavBar({ onSearch }: NavBarProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchValue.trim() !== "") {
       onSearch(searchValue.trim());
-      // Optional: clear the input after search (you can remove this line if you want to keep the text)
-      // setSearchValue("");
     }
   };
 

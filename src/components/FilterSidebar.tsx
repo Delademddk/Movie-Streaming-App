@@ -52,7 +52,7 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
   };
 
   return (
-    <div className="w-72 bg-zinc-950 border border-zinc-800 rounded-3xl p-6 flex flex-col h-fit">
+    <div className="w-72  p-6 flex flex-col h-fit">
       <div className="flex items-center gap-2 mb-6">
         <span className="text-blue-500 text-xl">⚙️</span>
         <h2 className="text-white font-semibold text-lg">Filters</h2>

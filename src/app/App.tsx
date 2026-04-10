@@ -14,7 +14,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen ">
       <NavBar onSearch={handleSearch} />
 
       {currentView === 'home' ? (
