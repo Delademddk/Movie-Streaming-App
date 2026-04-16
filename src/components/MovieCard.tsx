@@ -21,7 +21,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
     <div className="group cursor-pointer">
       {/* Poster Container */}
 
-      <div className="relative   w-full p-4  rounded-xl overflow-hidden bg-[#0F2026] border border-white/10 hover:border-white/20 transition">
+      <div className="relative   w-full max-w-55 p-4  rounded-xl overflow-hidden bg-[#0F2026] border border-white/10 hover:border-white/20 transition">
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
