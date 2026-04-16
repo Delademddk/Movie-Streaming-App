@@ -1,5 +1,3 @@
-"use client";
-
 import { Star } from "lucide-react";
 // import Image from 'next/image';
 
@@ -23,12 +21,11 @@ export default function MovieCard({ movie }: MovieCardProps) {
     <div className="group cursor-pointer">
       {/* Poster Container */}
 
-      <div className="relative aspect-2/3 w-full p-5  rounded-xl overflow-hidden bg-[#0F2026] border border-white/10 hover:border-white/20 transition">
+      <div className="relative   w-full max-w-55 p-4  rounded-xl overflow-hidden bg-[#0F2026] border border-white/10 hover:border-white/20 transition">
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
           className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
         />
 
         {/* Rating Badge - top right (exactly like screenshot) */}

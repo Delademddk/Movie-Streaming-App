@@ -1,17 +1,15 @@
-// 'use client';
-
-import { useState } from 'react';
-import { Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
+import { useState } from "react";
+import { SlidersHorizontal, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 interface FilterSidebarProps {
   onApply: (filters: {
@@ -22,17 +20,18 @@ interface FilterSidebarProps {
 }
 
 export default function FilterSidebar({ onApply }: FilterSidebarProps) {
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(['Sci-Fi', 'Drama']);
-  const [yearRange, setYearRange] = useState('2010-2019');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([
+    "Sci-Fi",
+    "Drama",
+  ]);
+  const [yearRange, setYearRange] = useState("2010-2019");
   const [minRating, setMinRating] = useState([8.0]);
 
-  const genresList = ['Sci-Fi', 'Action', 'Drama', 'Adventure'];
+  const genresList = ["Sci-Fi", "Action", "Drama", "Adventure"];
 
   const handleGenreChange = (genre: string) => {
     setSelectedGenres((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : [...prev, genre]
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
     );
   };
 
@@ -46,21 +45,20 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
 
   const handleClear = () => {
     setSelectedGenres([]);
-    setYearRange('All Years');
+    setYearRange("All Years");
     setMinRating([0]);
-    onApply({ genres: [], yearRange: 'All Years', minRating: 0 });
+    onApply({ genres: [], yearRange: "All Years", minRating: 0 });
   };
 
   return (
-    <div className="w-72  p-6 flex flex-col h-fit">
-      <div className="flex items-center gap-2 mb-6">
-        <span className="text-blue-500 text-xl">⚙️</span>
+    <div className="w-64  pt-6 pl-20 flex flex-col h-fit">
+      <div className="flex items-center gap-1.5 mb-4">
+        <SlidersHorizontal className="text-[#0D59F2] w-4.5 h-4.5" />
         <h2 className="text-white font-semibold text-lg">Filters</h2>
       </div>
 
-      {/* GENRE */}
-      <div className="mb-8">
-        <h3 className="text-white text-sm font-medium mb-3">GENRE</h3>
+      <div className="mb-6">
+        <h3 className="text-[#94A3B8] text-sm font-medium mb-3">GENRE</h3>
         <div className="space-y-3">
           {genresList.map((genre) => (
             <div key={genre} className="flex items-center gap-3">
@@ -68,10 +66,11 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
                 id={genre}
                 checked={selectedGenres.includes(genre)}
                 onCheckedChange={() => handleGenreChange(genre)}
+                className="rounded-[5px] h-4.5 w-4.5 bg-[#334155] cursor-pointer hover:brightness-130 data-[state=checked]:bg-[#334155] border data-[state=checked]:border-[#475569] border-[#475569]"
               />
               <label
                 htmlFor={genre}
-                className="text-white text-sm cursor-pointer"
+                className="text-white text-sm cursor-pointer "
               >
                 {genre}
               </label>
@@ -80,14 +79,15 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
         </div>
       </div>
 
-      {/* RELEASE YEAR */}
-      <div className="mb-8">
-        <h3 className="text-white text-sm font-medium mb-3">RELEASE YEAR</h3>
+      <div className="mb-6">
+        <h3 className="text-[#94A3B8] text-sm font-medium mb-3">
+          RELEASE YEAR
+        </h3>
         <Select value={yearRange} onValueChange={setYearRange}>
-          <SelectTrigger className="bg-zinc-900 border-zinc-700">
+          <SelectTrigger className="bg-[#1E293B] border-none rounded-[5px] w-full">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-zinc-900 border-zinc-700">
+          <SelectContent className="bg-[#1E293B] border-none text-sm text-white rounded-[5px]">
             <SelectItem value="All Years">All Years</SelectItem>
             <SelectItem value="2010-2019">2010 - 2019</SelectItem>
             <SelectItem value="2020-2024">2020 - 2024</SelectItem>
@@ -96,35 +96,37 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
         </Select>
       </div>
 
-      {/* MINIMUM RATING */}
-      <div className="mb-8">
-        <h3 className="text-white text-sm font-medium mb-3">MINIMUM RATING</h3>
-        <div className="px-2">
+      <div className="mb-6">
+        <h3 className="text-[#94A3B8] text-sm font-medium mb-3">
+          MINIMUM RATING
+        </h3>
+        <div className="flex items-center gap-2">
+          <Star className="w-5 h-5 text-[#EAB308] " />
+
           <Slider
             value={minRating}
             onValueChange={setMinRating}
             max={10}
             step={0.1}
-            className="mb-3"
+            className=" h-2"
           />
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1">
-              <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-              <span className="text-white font-medium">{minRating[0].toFixed(1)}</span>
-            </div>
-            <span className="text-zinc-500">10.0</span>
-          </div>
+
+          <span className="text-white text-sm font-bold">
+            {minRating[0].toFixed(1)}
+          </span>
         </div>
       </div>
 
-      {/* BUTTONS */}
-      <Button onClick={handleApply} className="w-full bg-blue-600 hover:bg-blue-700 mb-3">
+      <Button
+        onClick={handleApply}
+        className="w-full bg-blue-600 rounded-[5px] text-[16px] font-bold p-3 cursor-pointer hover:bg-blue-700 mb-6"
+      >
         Apply Changes
       </Button>
 
       <button
         onClick={handleClear}
-        className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+        className="text-[#94A3B8] hover:text-blue-400 text-sm font-medium cursor-pointer p-3 transition-colors"
       >
         Clear all filters
       </button>
