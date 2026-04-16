@@ -1,31 +1,63 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import FilterSidebar from "@/components/FilterSidebar";
 import MovieCard from "@/components/MovieCard";
 import Pagination from "@/components/Pagination";
-import { mockMovies, type Movie } from "@/data/mockMovies";
+import { mockMovies } from "@/data/mockMovies";
 
-interface SearchPageProps {
-  query: string;
-}
+type SearchFilters = {
+  genres: string[];
+  yearRange: string;
+  minRating: number;
+};
 
-export default function SearchPage({ query }: SearchPageProps) {
-  const [filters, setFilters] = useState({
+export default function SearchPage() {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q") ?? "";
+
+  const [filters, setFilters] = useState<SearchFilters>({
     genres: ["Sci-Fi", "Drama"] as string[],
     yearRange: "2010-2019",
     minRating: 8.0,
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const displayedMovies = mockMovies.slice(0, 8);
+  const displayedMovies = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return mockMovies.filter((movie) => {
+      const matchesQuery =
+        normalizedQuery === "" ||
+        movie.title.toLowerCase().includes(normalizedQuery);
+      const matchesGenre =
+        filters.genres.length === 0 || filters.genres.includes(movie.genre);
+      const matchesRating = movie.vote_average >= filters.minRating;
+
+      const matchesYearRange =
+        filters.yearRange === "All Years" ||
+        (() => {
+          const [startYear, endYear] = filters.yearRange
+            .split("-")
+            .map((value) => Number(value));
+          const releaseYear = Number(movie.release_date.split("-")[0]);
+
+          if (!Number.isFinite(startYear) || !Number.isFinite(endYear)) {
+            return true;
+          }
+
+          return releaseYear >= startYear && releaseYear <= endYear;
+        })();
+
+      return matchesQuery && matchesGenre && matchesRating && matchesYearRange;
+    });
+  }, [filters, query]);
 
   const totalPages = 12;
 
-  const handleApplyFilters = (newFilters: any) => {
+  const handleApplyFilters = (newFilters: SearchFilters) => {
     setFilters(newFilters);
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 600);
+    setCurrentPage(1);
   };
 
   return (
