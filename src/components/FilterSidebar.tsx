@@ -108,7 +108,7 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
             onValueChange={setMinRating}
             max={10}
             step={0.1}
-            className=" h-2"
+            className=" h-2 w-27"
           />
 
           <span className="text-white text-sm font-bold">

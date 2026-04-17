@@ -26,7 +26,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
   };
 
   return (
-    <header className="w-full bg-[#1E293B] px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4 relative">
+    <header className="sticky top-0 z-50 w-full bg-[#1E293B] px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4 ">
       {/* LEFT SIDE - unchanged */}
       <div className="flex items-center min-w-0">
         <DropdownMenu>
