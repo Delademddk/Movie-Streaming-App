@@ -126,3 +126,52 @@ export const mockMovies: Movie[] = [
     },
     // Add more if you want (we'll use these 6 for now)
   ];
+
+  export const detailedMovies: Record<number, {
+  runtime: string;
+  overview: string;
+  budget: string;
+  revenue: string;
+  language: string;
+  status: string;
+  cast: Array<{ name: string; role: string; image: string }>;
+}> = {
+  1: {
+    runtime: "2h 28m",
+    overview: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    budget: "$160,000,000",
+    revenue: "$836,848,102",
+    language: "English",
+    status: "Released",
+    cast: [
+      { name: "Leonardo DiCaprio", role: "Cobb", image: "https://picsum.photos/id/64/300/300" },
+      { name: "Joseph Gordon-Levitt", role: "Arthur", image: "https://picsum.photos/id/1005/300/300" },
+      { name: "Ellen Page", role: "Ariadne", image: "https://picsum.photos/id/201/300/300" },
+    ],
+  },
+  7: { // Interstellar - matches your screenshot perfectly
+    runtime: "2h 49m",
+    overview: "When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team of researchers, to find a new planet for humans. Through a wormhole near Saturn, they travel to a distant galaxy in search of a home across the stars.",
+    budget: "$165,000,000",
+    revenue: "$701,729,206",
+    language: "English",
+    status: "Released",
+    cast: [
+      { name: "Matthew McConaughey", role: "Cooper", image: "https://picsum.photos/id/64/300/300" },
+      { name: "Anne Hathaway", role: "Brand", image: "https://picsum.photos/id/1005/300/300" },
+      { name: "Jessica Chastain", role: "Murph", image: "https://picsum.photos/id/201/300/300" },
+      { name: "Christopher Nolan", role: "Director", image: "https://picsum.photos/id/29/300/300" },
+    ],
+  },
+  // You can add more movies here later (just copy the pattern)
+  2: {
+    runtime: "2h 32m",
+    overview: "When the menace known as the Joker wreaks havoc on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    budget: "$185,000,000",
+    revenue: "$1,004,934,926",
+    language: "English",
+    status: "Released",
+    cast: [],
+  },
+
+};
