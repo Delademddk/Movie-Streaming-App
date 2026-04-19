@@ -30,7 +30,7 @@ export default function MovieDetailsPage() {
     return (
       <div className="min-h-screen bg-zinc-950 text-white pb-12">
         {/* Background */}
-        <div className="relative h-96 bg-gradient-to-b from-black/90 to-zinc-950">
+        <div className="relative h-96 bg-linear-to-b from-black/90 to-zinc-950">
           <img
             src="https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
             alt="background"
@@ -64,7 +64,7 @@ export default function MovieDetailsPage() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white pb-12">
       {/* Background */}
-      <div className="relative h-96 bg-gradient-to-b from-black/90 to-zinc-950">
+      <div className="relative h-96 bg-linear-to-b from-black/90 to-zinc-950">
         <img
           src="https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
           alt="background"
@@ -78,7 +78,7 @@ export default function MovieDetailsPage() {
           <div className="lg:w-2/3">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Poster */}
-              <div className="flex-shrink-0 w-64 rounded-3xl overflow-hidden border border-white/20 shadow-2xl">
+              <div className="shrink-0 w-64 rounded-3xl overflow-hidden border border-white/20 shadow-2xl">
                 <img
                   src={posterSrc}
                   alt={movie.title}
