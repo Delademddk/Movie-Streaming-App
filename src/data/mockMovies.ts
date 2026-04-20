@@ -175,3 +175,30 @@ export const mockMovies: Movie[] = [
   },
 
 };
+
+export const castAndCrew = [
+  {
+    id: 1,
+    name: "Matthew McConaughey",
+    role: "COOPER",
+    image: "https://picsum.photos/id/64/300/300",
+  },
+  {
+    id: 2,
+    name: "Anne Hathaway",
+    role: "BRAND",
+    image: "https://picsum.photos/id/1005/300/300",
+  },
+  {
+    id: 3,
+    name: "Jessica Chastain",
+    role: "MURPH",
+    image: "https://picsum.photos/id/201/300/300",
+  },
+  {
+    id: 4,
+    name: "Christopher Nolan",
+    role: "DIRECTOR",
+    image: "https://picsum.photos/id/29/300/300",
+  },
+];
