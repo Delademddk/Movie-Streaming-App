@@ -13,7 +13,7 @@ type SearchFilters = {
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get("q") ?? "";
+  const query = searchParams.get("query") ?? "";
 
   const [filters, setFilters] = useState<SearchFilters>({
     genres: ["Sci-Fi", "Drama"] as string[],
@@ -88,7 +88,7 @@ export default function SearchPage() {
 
           <div className="flex-1">
             <div className="flex border-b border-[#1E293B] mb-6">
-              {["Movies", "Series", "Cast & Crew", "Collections"].map((tab) => (
+              {["Movies", "Series"].map((tab) => (
                 <button
                   key={tab}
                   className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${

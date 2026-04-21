@@ -90,16 +90,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
           >
             TV shows
           </NavLink>
-          <NavLink
-            to="/my-list"
-            className={({ isActive }) =>
-              isActive
-                ? "text-blue-500"
-                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
-            }
-          >
-            My List
-          </NavLink>
+          
         </div>
       </div>
 

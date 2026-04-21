@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import MovieDetailsPage from "./pages/MovieDetailsPage";
 import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
-import MyListPage from "./pages/MyListPage";
 
 export default function App() {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ export default function App() {
       return;
     }
 
-    navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+    navigate(`/search?query=${encodeURIComponent(trimmedQuery)}`);
   };
 
   const isSearchPage = location.pathname === "/search";
@@ -33,7 +32,6 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/movies" element={<MoviesPage />} />
         <Route path="/tv-shows" element={<TVShowsPage />} />
-        <Route path="/my-list" element={<MyListPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/movie/:id" element={<MovieDetailsPage />} />
       </Routes>
