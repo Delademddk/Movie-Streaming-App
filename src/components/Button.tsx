@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 type Props = {
   onClick: () => void;
-  text: ReactNode;           // ← This is the key change (was string)
+  text: ReactNode;          
   className?: string;
 };
 

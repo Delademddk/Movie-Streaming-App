@@ -1,6 +1,5 @@
-// 'use client';
-
 import { Menu, Search } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import Logo from "../assets/Logo.svg";
 import UserAvatar from "./UserAvatar";
@@ -13,7 +12,7 @@ import {
 import { useState } from "react";
 
 interface NavBarProps {
-  onSearch: (query: string) => void;   // ← This is the key prop
+  onSearch: (query: string) => void;
 }
 
 export default function NavBar({ onSearch }: NavBarProps) {
@@ -27,7 +26,6 @@ export default function NavBar({ onSearch }: NavBarProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#1E293B] px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-4 ">
-      {/* LEFT SIDE - unchanged */}
       <div className="flex items-center min-w-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -40,30 +38,73 @@ export default function NavBar({ onSearch }: NavBarProps) {
             align="end"
             sideOffset={8}
           >
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">Home</DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">Movies</DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">TV Shows</DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">My List</DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              Home
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              Movies
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              TV Shows
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              My List
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <Link to="/" className="flex items-center">
+          <img className="w-5 h-4 md:w-6 md:h-5 mr-2" src={Logo} alt="Logo" />
+          <h2 className="text-white text-[16px] max-sm:text-[15px] lg:text-[20px] font-bold whitespace-nowrap">
+            Movie Explorer
+          </h2>
+        </Link>
 
-        <img className="w-5 h-4 md:w-6 md:h-5 mr-2" src={Logo} alt="Logo" />
-        <h2 className="text-white text-[16px] max-sm:text-[15px] lg:text-[20px] font-bold whitespace-nowrap">
-          Movie Explorer
-        </h2>
-
-        <div className="hidden md:flex items-center text-xs max-md:text-xs lg:text-[14px] gap-3 md:gap-4 lg:gap-6 px-3 md:px-4 lg:px-8">
-          <a href="#" className="cursor-pointer hover:text-white transition-colors text-[#94A3B8]">Home</a>
-          <a href="#" className="cursor-pointer hover:text-white transition-colors text-[#94A3B8]">Movies</a>
-          <a href="#" className="cursor-pointer hover:text-white transition-colors text-[#94A3B8]">TV shows</a>
-          <a href="#" className="cursor-pointer hover:text-white transition-colors text-[#94A3B8]">My List</a>
+        <div className="hidden md:flex items-center text-xs max-md:text-xs lg:text-[14px] gap-3 md:gap-4 lg:gap-6 px-3 md:px-4 lg:px-8 ">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/movies"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            Movies
+          </NavLink>
+          <NavLink
+            to="/tv-shows"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            TV shows
+          </NavLink>
+          <NavLink
+            to="/my-list"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            My List
+          </NavLink>
         </div>
       </div>
 
-      {/* RIGHT SIDE - Search + Avatar */}
       <div className="flex items-center gap-2 md:gap-4">
         <div className="relative flex items-center">
-          {/* Desktop Search */}
           <div className="relative hidden sm:block">
             <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 lg:h-4.5 lg:w-4.5 text-gray-500" />
             <Input
@@ -75,7 +116,6 @@ export default function NavBar({ onSearch }: NavBarProps) {
             />
           </div>
 
-          {/* Mobile Search */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="sm:hidden text-gray-400 hover:text-white cursor-pointer transition-colors">

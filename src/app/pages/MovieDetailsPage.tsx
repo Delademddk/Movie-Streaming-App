@@ -34,7 +34,6 @@ export default function MovieDetailsPage() {
   if (!movie) {
     return (
       <div className="min-h-screen bg-zinc-950 text-white pb-12">
-        {/* Background */}
         <div className="relative h-96 bg-linear-to-b from-black/90 to-zinc-950">
           <img
             src="https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
@@ -153,9 +152,7 @@ export default function MovieDetailsPage() {
 
         <div className="max-w-screen-2xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 text-white">
-            {/* LEFT COLUMN - Synopsis, Trailer, Cast */}
             <div className="lg:col-span-8 space-y-12">
-              {/* Synopsis */}
               <div>
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 border-l-4 pl-4 border-[#0D59F2]">
                   Synopsis
@@ -165,7 +162,6 @@ export default function MovieDetailsPage() {
                 </p>
               </div>
 
-              {/* Official Trailer */}
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 border-l-4 pl-4 border-[#0D59F2]">
@@ -193,7 +189,6 @@ export default function MovieDetailsPage() {
                 </div>
               </div>
 
-              {/* Cast & Crew */}
               <div>
                 <div>
                   <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 border-l-4 pl-4 border-[#0D59F2]">
@@ -215,11 +210,10 @@ export default function MovieDetailsPage() {
                       </div>
                     ))}
                   </div>
-                </div>{" "}
+                </div>
               </div>
             </div>
 
-            {/* RIGHT COLUMN - Movie Info Sidebar */}
             <div className="lg:col-span-4 flex flex-col">
               <div className="bg-none border border-white/10 rounded-3xl p-6  ">
                 <h3 className="text-xl font-semibold mb-6">Movie Info</h3>
@@ -244,7 +238,6 @@ export default function MovieDetailsPage() {
                     <span className="font-medium">{details.revenue}</span>
                   </div>
 
-                  {/* Genres */}
                   <div>
                     <p className="text-zinc-400 text-sm mb-3">GENRES</p>
                     <div className="flex flex-wrap gap-2">
@@ -254,7 +247,6 @@ export default function MovieDetailsPage() {
                     </div>
                   </div>
 
-                  {/* Rating Distribution */}
                   <div>
                     <p className="text-zinc-400 text-sm mb-3">
                       RATING DISTRIBUTION

@@ -1,97 +1,83 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import HeroBanner from "@/components/HeroBanner";
 import FilterBar from "@/components/FilterBar";
 import MovieCard from "@/components/MovieCard";
 import Loader from "@/components/Loader";
 import Pagination from "@/components/Pagination";
-import { mockMovies, popularMovies, type Movie } from "@/data/mockMovies";
+
+import { usePopularMovies, useDiscoverMovies } from "@/hooks/queryHooks";
+
+type HomeFilters = {
+  genre: string;
+  year: string;
+  rating: string;
+  sort: string;
+};
 
 export default function HomePage() {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<HomeFilters>({
     genre: 'All Genres',
-    year: '2024',
-    rating: '8.0+',
+    year: 'All Years',
+    rating: 'All Ratings',
     sort: 'Popularity',
   });
 
-  // Bottom section (mockMovies) - filtered + paginated
-  const [displayedMovies, setDisplayedMovies] = useState<Movie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const MOVIES_PER_PAGE = 6;
-
-  // Filter + sort logic for the bottom section only
-  const getFilteredMoviesForPage = (page: number) => {
-    let filtered = [...mockMovies];
-
-    // Genre filter
-    if (filters.genre !== 'All Genres') {
-      filtered = filtered.filter((m) => m.genre === filters.genre);
-    }
-
-    // Year filter
-    if (filters.year !== 'All Years' && filters.year !== '2024') {
-      filtered = filtered.filter((m) => m.release_date.startsWith(filters.year));
-    }
-
-    // Rating filter
-    const minRating = parseFloat(filters.rating) || 0;
-    if (minRating > 0) {
-      filtered = filtered.filter((m) => m.vote_average >= minRating);
-    }
-
-    // Sort
-    if (filters.sort === 'Rating') {
-      filtered.sort((a, b) => b.vote_average - a.vote_average);
-    } else if (filters.sort === 'Newest First') {
-      filtered.sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
-    } else if (filters.sort === 'Oldest First') {
-      filtered.sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
-    }
-
-    const start = (page - 1) * MOVIES_PER_PAGE;
-    return filtered.slice(start, start + MOVIES_PER_PAGE);
+  const genreMap: Record<string, number> = {
+    Action: 28,
+    Comedy: 35,
+    Drama: 18,
+    "Sci-Fi": 878,
+    Adventure: 12,
+    Crime: 80,
+    Thriller: 53,
   };
 
-  // Reset bottom section when filters change + show loader
-  useEffect(() => {
-    setIsLoading(true);
-    setDisplayedMovies([]);
+  const sortMap = {
+    Popularity: "popularity.desc",
+    Rating: "vote_average.desc",
+    "Newest First": "release_date.desc",
+    "Oldest First": "release_date.asc",
+  } as const;
 
-    setTimeout(() => {
-      const firstPage = getFilteredMoviesForPage(1);
-      setDisplayedMovies(firstPage);
-      setCurrentPage(1);
-      setIsLoading(false);
-    }, 900);
+  const apiFilters = {
+    page: currentPage,
+    genre: filters.genre !== "All Genres" ? genreMap[filters.genre] : undefined,
+    minRating: parseFloat(filters.rating) || undefined,
+    year: filters.year !== "All Years" ? Number(filters.year) : undefined,
+    sortBy: sortMap[filters.sort as keyof typeof sortMap],
+  };
+
+  const {
+    data: popularData,
+    isLoading: popularLoading,
+    isError: popularError,
+    error: popularErrorDetails,
+  } = usePopularMovies();
+  const {
+    data: discoverData,
+    isLoading: discoverLoading,
+    isError: discoverError,
+    error: discoverErrorDetails,
+  } = useDiscoverMovies(apiFilters);
+
+  useEffect(() => {
+    setCurrentPage(1);
   }, [filters]);
 
-  // Load more (append) when pagination is clicked
   const handlePageChange = (page: number) => {
-    setIsLoading(true);
-
-    setTimeout(() => {
-      const newMovies = getFilteredMoviesForPage(page);
-      setDisplayedMovies((prev) => [...prev, ...newMovies]);
-      setCurrentPage(page);
-      setIsLoading(false);
-    }, 800);
+    setCurrentPage(page);
   };
 
   return (
     <div className="p-4 ">
-      {/* HERO BANNER */}
       <HeroBanner />
 
-      {/* FILTER BAR - only affects bottom section */}
       <FilterBar onFiltersChange={setFilters} />
 
       <div className="px-8 py-6 max-w-screen-2xl mx-auto">
         
-        {/* ==================== POPULAR MOVIES (Top - Horizontal Scroll) ==================== */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-white">Popular Movies</h2>
@@ -103,9 +89,15 @@ export default function HomePage() {
             </a>
           </div>
 
-          {/* Horizontal scroll - same card size as bottom */}
           <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide">
-            {popularMovies.map((movie) => (
+            {popularLoading && <Loader />}
+            {popularError && (
+              <p className="text-sm text-red-400">
+                {(popularErrorDetails as Error).message}
+              </p>
+            )}
+
+            {popularData?.results?.map((movie) => (
               <div key={movie.id} className="flex-none min-w-55">
                 <MovieCard movie={movie} />
               </div>
@@ -113,24 +105,25 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ==================== MOCK MOVIES (Bottom - Filtered Grid + Pagination) ==================== */}
         <div>
           <h2 className="text-2xl font-semibold text-white mb-6">Movies</h2>
 
-          {/* Grid - same card size as popular section */}
+          {discoverLoading && <Loader />}
+          {discoverError && (
+            <p className="mb-4 text-sm text-red-400">
+              {(discoverErrorDetails as Error).message}
+            </p>
+          )}
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            {displayedMovies.map((movie) => (
+            {discoverData?.results?.map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
 
-          {/* Loader */}
-          {isLoading && <Loader />}
-
-          {/* Pagination */}
           <Pagination
             currentPage={currentPage}
-            totalPages={12}
+            totalPages={Math.min(discoverData?.total_pages ?? 1, 12)}
             onPageChange={handlePageChange}
           />
         </div>

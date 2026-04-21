@@ -7,7 +7,6 @@ export type Movie = {
   genre: string;
 };
 
-
 export const popularMovies: Movie[] = [
   {
     id: 1,
@@ -111,7 +110,7 @@ export const mockMovies: Movie[] = [
     {
       id: 5,
       title: "Blade Runner 2049 1",
-      poster_path: "/gajHSz3p6n0f8o6qZ8Z7pZ7pZ7pZ.jpg", // real path
+      poster_path: "/gajHSz3p6n0f8o6qZ8Z7pZ7pZ7pZ.jpg", 
       vote_average: 8.0,
       release_date: "2017-10-06",
       genre: "Sci-Fi",
@@ -124,7 +123,6 @@ export const mockMovies: Movie[] = [
       release_date: "2015-12-25",
       genre: "Action",
     },
-    // Add more if you want (we'll use these 6 for now)
   ];
 
   export const detailedMovies: Record<number, {
@@ -149,7 +147,7 @@ export const mockMovies: Movie[] = [
       { name: "Ellen Page", role: "Ariadne", image: "https://picsum.photos/id/201/300/300" },
     ],
   },
-  7: { // Interstellar - matches your screenshot perfectly
+  7: { 
     runtime: "2h 49m",
     overview: "When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team of researchers, to find a new planet for humans. Through a wormhole near Saturn, they travel to a distant galaxy in search of a home across the stars.",
     budget: "$165,000,000",
@@ -163,7 +161,6 @@ export const mockMovies: Movie[] = [
       { name: "Christopher Nolan", role: "Director", image: "https://picsum.photos/id/29/300/300" },
     ],
   },
-  // You can add more movies here later (just copy the pattern)
   2: {
     runtime: "2h 32m",
     overview: "When the menace known as the Joker wreaks havoc on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
