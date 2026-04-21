@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 
 interface NavBarProps {
-  onSearch: (query: string) => void;  
+  onSearch: (query: string) => void;
 }
 
 export default function NavBar({ onSearch }: NavBarProps) {
@@ -38,27 +38,69 @@ export default function NavBar({ onSearch }: NavBarProps) {
             align="end"
             sideOffset={8}
           >
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">Home</DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">Movies</DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">TV Shows</DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">My List</DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              Home
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              Movies
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              TV Shows
+            </DropdownMenuItem>
+            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
+              My List
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-<Link to="/" className="flex items-center">
-
-        <img className="w-5 h-4 md:w-6 md:h-5 mr-2" src={Logo} alt="Logo" />
-        <h2 className="text-white text-[16px] max-sm:text-[15px] lg:text-[20px] font-bold whitespace-nowrap">
-          Movie Explorer
-        </h2>
-</Link>
+        <Link to="/" className="flex items-center">
+          <img className="w-5 h-4 md:w-6 md:h-5 mr-2" src={Logo} alt="Logo" />
+          <h2 className="text-white text-[16px] max-sm:text-[15px] lg:text-[20px] font-bold whitespace-nowrap">
+            Movie Explorer
+          </h2>
+        </Link>
 
         <div className="hidden md:flex items-center text-xs max-md:text-xs lg:text-[14px] gap-3 md:gap-4 lg:gap-6 px-3 md:px-4 lg:px-8 ">
-          <NavLink to="/" className={({ isActive }) => isActive ? "text-blue-500" : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"}>Home</NavLink>
-          <NavLink to="/movies" className={({ isActive }) => isActive ? "text-blue-500" : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"}>Movies</NavLink>
-          <NavLink to="/tv-shows" className={({ isActive }) => isActive ? "text-blue-500" : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"}>TV shows</NavLink>
-          <NavLink to="/my-list" className={({ isActive }) => isActive ? "text-blue-500" : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"}>My List</NavLink>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/movies"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            Movies
+          </NavLink>
+          <NavLink
+            to="/tv-shows"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            TV shows
+          </NavLink>
+          <NavLink
+            to="/my-list"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-500"
+                : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+            }
+          >
+            My List
+          </NavLink>
         </div>
-      
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
