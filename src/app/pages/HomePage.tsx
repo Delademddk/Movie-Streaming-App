@@ -4,8 +4,8 @@ import FilterBar from "@/components/FilterBar";
 import MovieCard from "@/components/MovieCard";
 import Loader from "@/components/Loader";
 import Pagination from "@/components/Pagination";
-
-import { usePopularMovies, useDiscoverMovies } from "@/hooks/queryHooks";
+import { usePopularMovies } from "@/hooks/usePopularMovies";
+import { useDiscoverMovies } from "@/hooks/useDiscoverMovies";
 
 type HomeFilters = {
   genre: string;
