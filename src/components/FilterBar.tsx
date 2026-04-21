@@ -1,5 +1,3 @@
-// 'use client';
-
 import { useState, useEffect } from 'react';
 import { ChevronDown, Funnel } from 'lucide-react';
 import {
@@ -38,9 +36,7 @@ export default function FilterBar({ onFiltersChange }: FilterBarProps) {
   return (
     <div className="p-4 border rounded-[12px] border-zinc-800 bg-[#171D29] ">
       <div className="flex items-center justify-between max-w-screen-2xl mx-auto">
-        {/* Left filters */}
         <div className="flex items-center gap-3">
-          {/* All Genres - Blue button */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="default" className="rounded-[8px] bg-blue-600 hover:bg-blue-700 text-white px-4 py-2">
@@ -83,7 +79,6 @@ export default function FilterBar({ onFiltersChange }: FilterBarProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Rating */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="rounded-[8px] bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-white px-4 py-2">
@@ -105,7 +100,6 @@ export default function FilterBar({ onFiltersChange }: FilterBarProps) {
           </DropdownMenu>
         </div>
 
-        {/* Sort by (right side) */}
         <div className='flex items-center'>
 
         <p className='text-[#94A3B8]'>Sort by :</p>

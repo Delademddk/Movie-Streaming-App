@@ -55,7 +55,6 @@ export default function HeroBanner() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-slide every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % movies.length);
@@ -74,7 +73,6 @@ export default function HeroBanner() {
 
   return (
     <section className="relative w-full h-[75vh] rounded-[14px] flex items-end overflow-hidden mb-4">
-      {/* Background images with fade transition */}
       <div className="absolute inset-0">
         {movies.map((movie, index) => (
           <img
@@ -88,12 +86,9 @@ export default function HeroBanner() {
         ))}
       </div>
 
-      {/* Gradient overlay */}
       <div className="absolute inset-0 bg-linear-to-r from-black/90 via-black/70 to-transparent" />
 
-      {/* Content + Controls */}
       <div className="relative z-10 w-full px-6 md:px-18 pb-12 max-w-screen-2xl mx-auto flex items-end justify-between">
-        {/* Left content (title, overview, action buttons) */}
         <div className="max-w-xl">
           <h1 className="text-white text-3xl md:text-6xl font-extrabold mb-4 leading-tight">
             {movies[currentIndex].title}
@@ -127,7 +122,6 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* Right bottom corner navigation buttons */}
         <div className="flex items-center gap-3 self-end">
           <button
             onClick={prevSlide}
