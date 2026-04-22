@@ -36,19 +36,24 @@ export type SearchMoviesResponse =
 export type SearchTVResponse =
   paths["/3/search/tv"]["get"]["responses"]["200"]["content"]["application/json"];
 
-export function getPopularMovies(page = 1) {
-  return fetchFromTMDB<PopularMoviesResponse>(
-    `/3/movie/popular?page=${page}`
-  );
-}
+export type TrendingMoviesResponse =
+  paths["/3/trending/movie/{time_window}"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export type DiscoverParams = {
   page?: number;
   genre?: number;
   minRating?: number;
   year?: number;
-  sortBy?: "popularity.desc" | "vote_average.desc" | "release_date.desc" | "release_date.asc";
+  sortBy?:
+    | "popularity.desc"
+    | "vote_average.desc"
+    | "release_date.desc"
+    | "release_date.asc";
 };
+
+export function getPopularMovies(page = 1) {
+  return fetchFromTMDB<PopularMoviesResponse>(`/3/movie/popular?page=${page}`);
+}
 
 export function discoverMovies({
   page = 1,
@@ -75,10 +80,9 @@ export function discoverMovies({
   }
 
   return fetchFromTMDB<DiscoverMoviesResponse>(
-    `/3/discover/movie?${query.toString()}`
+    `/3/discover/movie?${query.toString()}`,
   );
 }
-
 
 export function searchMovies(query: string, page = 1) {
   const params = new URLSearchParams({
@@ -87,7 +91,7 @@ export function searchMovies(query: string, page = 1) {
   });
 
   return fetchFromTMDB<SearchMoviesResponse>(
-    `/3/search/movie?${params.toString()}`
+    `/3/search/movie?${params.toString()}`,
   );
 }
 
@@ -97,9 +101,11 @@ export function searchTV(query: string, page = 1) {
     page: String(page),
   });
 
-  return fetchFromTMDB<SearchTVResponse>(
-    `/3/search/tv?${params.toString()}`
-  );
+  return fetchFromTMDB<SearchTVResponse>(`/3/search/tv?${params.toString()}`);
+}
+
+export function getTrendingMovies() {
+  return fetchFromTMDB<TrendingMoviesResponse>("/3/trending/movie/day");
 }
 
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
