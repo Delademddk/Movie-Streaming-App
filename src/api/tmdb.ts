@@ -24,15 +24,18 @@ async function fetchFromTMDB<T>(endpoint: string): Promise<T> {
   return res.json();
 }
 
-
 export type PopularMoviesResponse =
   paths["/3/movie/popular"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export type DiscoverMoviesResponse =
   paths["/3/discover/movie"]["get"]["responses"]["200"]["content"]["application/json"];
 
+export type SearchMoviesResponse =
+  paths["/3/search/movie"]["get"]["responses"]["200"]["content"]["application/json"];
 
-  
+export type SearchTVResponse =
+  paths["/3/search/tv"]["get"]["responses"]["200"]["content"]["application/json"];
+
 export function getPopularMovies(page = 1) {
   return fetchFromTMDB<PopularMoviesResponse>(
     `/3/movie/popular?page=${page}`
@@ -76,6 +79,28 @@ export function discoverMovies({
   );
 }
 
+
+export function searchMovies(query: string, page = 1) {
+  const params = new URLSearchParams({
+    query,
+    page: String(page),
+  });
+
+  return fetchFromTMDB<SearchMoviesResponse>(
+    `/3/search/movie?${params.toString()}`
+  );
+}
+
+export function searchTV(query: string, page = 1) {
+  const params = new URLSearchParams({
+    query,
+    page: String(page),
+  });
+
+  return fetchFromTMDB<SearchTVResponse>(
+    `/3/search/tv?${params.toString()}`
+  );
+}
 
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
