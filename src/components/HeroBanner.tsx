@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Play, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import Button from "./Button";
+import { useTrendingMovies } from "@/hooks/useTrendingMovies";
+import { getImageUrl } from "@/api/tmdb";
 
 type Movie = {
   id: number;
@@ -10,66 +12,48 @@ type Movie = {
 };
 
 export default function HeroBanner() {
-  const movies: Movie[] = [
-    {
-      id: 1,
-      title: "Interstellar",
-      backdrop:
-        "https://image.tmdb.org/t/p/original/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
-      overview:
-        "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-    },
-    {
-      id: 2,
-      title: "Inception",
-      backdrop:
-        "https://m.media-amazon.com/images/S/pv-target-images/21b2db2dbd1ecefe8e6d6578dd6f8c054da0cfc801d008b54167c81a7eaa0356.jpg",
-      overview:
-        "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
-    },
-    {
-      id: 3,
-      title: "The Dark Knight",
-      backdrop:
-        "https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-      overview:
-        "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
-    },
-    {
-      id: 4,
-      title: "Dune: Part Two",
-      backdrop:
-        "https://miro.medium.com/1*SvqveyU-E2RAHPwHykl5YQ.jpeg",
-      overview:
-        "Paul Atreides unites Chani and the Fremen people of Arrakis in a war for the galaxy's most valuable asset while seeking revenge for his father's death.",
-    },
-    {
-      id: 5,
-      title: "Oppenheimer",
-      backdrop:
-        "https://storage.ghost.io/c/cc/38/cc38d485-3f83-4ed4-95ed-586b53e0b5c5/content/images/2023/07/oppenheimer-header.jpg",
-      overview:
-        "The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.",
-    },
-  ];
+  const { data, isLoading } = useTrendingMovies();
+
+  const movies: Movie[] =
+    data?.results
+      ?.filter((movie) => movie.backdrop_path) 
+      ?.slice(2, 8) 
+      ?.map((movie) => ({
+        id: movie.id,
+        title: movie.title ?? "Untitled",
+        backdrop: getImageUrl(movie.backdrop_path ?? null),
+        overview: movie.overview ?? "No description available",
+      })) || [];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    if (movies.length === 0) return;
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % movies.length);
     }, 6000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [movies.length]);
 
   const prevSlide = () => {
+    if (movies.length === 0) return;
     setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length);
   };
 
   const nextSlide = () => {
+    if (movies.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % movies.length);
   };
+
+  if (isLoading || movies.length === 0) {
+    return (
+      <section className="relative w-full h-[75vh] rounded-[14px] bg-[#1E293B] flex items-center justify-center mb-4">
+        <p className="text-white text-sm">Loading trending movies...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="relative w-full h-[75vh] rounded-[14px] flex items-end overflow-hidden mb-4">
