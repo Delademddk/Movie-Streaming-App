@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { SlidersHorizontal, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,35 +12,55 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface FilterSidebarProps {
-  onApply: (filters: {
-    genres: string[];
-    yearRange: string;
-    minRating: number;
-  }) => void;
-}
+export default function FilterSidebar() {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-export default function FilterSidebar({ onApply }: FilterSidebarProps) {
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([
-    "Sci-Fi",
-    "Drama",
-  ]);
-  const [yearRange, setYearRange] = useState("2010-2019");
-  const [minRating, setMinRating] = useState([8.0]);
+  // =============================
+  // 🔹 READ FROM URL
+  // =============================
+  const query = searchParams.get("q") ?? "";
+  const type = searchParams.get("type") ?? "movie";
+
+  const urlGenres = searchParams.get("genres")?.split(",") || [];
+  const urlYear = searchParams.get("year") ?? "All Years";
+  const urlRating = Number(searchParams.get("rating") ?? 0);
+
+  // =============================
+  // 🔹 LOCAL STATE (UI CONTROL)
+  // =============================
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(urlGenres);
+  const [yearRange, setYearRange] = useState(urlYear);
+  const [minRating, setMinRating] = useState([urlRating]);
+
+  // keep UI in sync if URL changes (important!)
+  useEffect(() => {
+    setSelectedGenres(urlGenres);
+    setYearRange(urlYear);
+    setMinRating([urlRating]);
+  }, [searchParams]);
 
   const genresList = ["Sci-Fi", "Action", "Drama", "Adventure"];
 
+  // =============================
+  // 🔹 HANDLERS
+  // =============================
+
   const handleGenreChange = (genre: string) => {
     setSelectedGenres((prev) =>
-      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
+      prev.includes(genre)
+        ? prev.filter((g) => g !== genre)
+        : [...prev, genre]
     );
   };
 
   const handleApply = () => {
-    onApply({
-      genres: selectedGenres,
-      yearRange,
-      minRating: minRating[0],
+    setSearchParams({
+      q: query,
+      type,
+      page: "1",
+      genres: selectedGenres.join(","),
+      year: yearRange,
+      rating: String(minRating[0]),
     });
   };
 
@@ -47,16 +68,26 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
     setSelectedGenres([]);
     setYearRange("All Years");
     setMinRating([0]);
-    onApply({ genres: [], yearRange: "All Years", minRating: 0 });
+
+    setSearchParams({
+      q: query,
+      type,
+      page: "1",
+    });
   };
 
+  // =============================
+  // 🔹 UI
+  // =============================
+
   return (
-    <div className="w-64  pt-6 pl-20 flex flex-col h-fit">
+    <div className="w-64 pt-6 pl-20 flex flex-col h-fit">
       <div className="flex items-center gap-1.5 mb-4">
         <SlidersHorizontal className="text-[#0D59F2] w-4.5 h-4.5" />
         <h2 className="text-white font-semibold text-lg">Filters</h2>
       </div>
 
+      {/* GENRE */}
       <div className="mb-6">
         <h3 className="text-[#94A3B8] text-sm font-medium mb-3">GENRE</h3>
         <div className="space-y-3">
@@ -70,7 +101,7 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
               />
               <label
                 htmlFor={genre}
-                className="text-white text-sm cursor-pointer "
+                className="text-white text-sm cursor-pointer"
               >
                 {genre}
               </label>
@@ -79,6 +110,7 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
         </div>
       </div>
 
+      {/* YEAR */}
       <div className="mb-6">
         <h3 className="text-[#94A3B8] text-sm font-medium mb-3">
           RELEASE YEAR
@@ -96,19 +128,20 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
         </Select>
       </div>
 
+      {/* RATING */}
       <div className="mb-6">
         <h3 className="text-[#94A3B8] text-sm font-medium mb-3">
           MINIMUM RATING
         </h3>
         <div className="flex items-center gap-2">
-          <Star className="w-5 h-5 text-[#EAB308] " />
+          <Star className="w-5 h-5 text-[#EAB308]" />
 
           <Slider
             value={minRating}
             onValueChange={setMinRating}
             max={10}
             step={0.1}
-            className=" h-2 w-27"
+            className="h-2 w-27"
           />
 
           <span className="text-white text-sm font-bold">
@@ -117,6 +150,7 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
         </div>
       </div>
 
+      {/* APPLY */}
       <Button
         onClick={handleApply}
         className="w-full bg-blue-600 rounded-[5px] text-[16px] font-bold p-3 cursor-pointer hover:bg-blue-700 mb-6"
@@ -124,6 +158,7 @@ export default function FilterSidebar({ onApply }: FilterSidebarProps) {
         Apply Changes
       </Button>
 
+      {/* CLEAR */}
       <button
         onClick={handleClear}
         className="text-[#94A3B8] hover:text-blue-400 text-sm font-medium cursor-pointer p-3 transition-colors"

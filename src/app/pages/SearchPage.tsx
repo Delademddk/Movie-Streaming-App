@@ -58,11 +58,10 @@ export default function SearchPage() {
   const selectedGenreIds =
     genresParam
       ?.split(",")
-      .map((g) => GENRE_MAP[g])
+      .map((genre) => GENRE_MAP[genre])
       .filter(Boolean) || [];
 
   const filteredResults = results.filter((item: any) => {
-    // ⭐ Rating
     if (ratingParam && !isNaN(Number(ratingParam))) {
       if (item.vote_average < Number(ratingParam)) return false;
     }

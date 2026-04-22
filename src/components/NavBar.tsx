@@ -1,5 +1,5 @@
 import { Menu, Search } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import Logo from "../assets/Logo.svg";
 import UserAvatar from "./UserAvatar";
@@ -9,18 +9,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-interface NavBarProps {
-  onSearch: (query: string) => void;
-}
+export default function NavBar() {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-export default function NavBar({ onSearch }: NavBarProps) {
   const [searchValue, setSearchValue] = useState("");
 
+  // ✅ Sync input with URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const query = params.get("q") || "";
+    setSearchValue(query);
+  }, [location.search]);
+
+  // ✅ Handle search
+  const handleSearch = () => {
+    const trimmed = searchValue.trim();
+    if (!trimmed) return;
+
+    navigate(`/search?q=${trimmed}&type=movie&page=1`);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchValue.trim() !== "") {
-      onSearch(searchValue.trim());
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -52,6 +66,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
         <Link to="/" className="flex items-center">
           <img className="w-5 h-4 md:w-6 md:h-5 mr-2" src={Logo} alt="Logo" />
           <h2 className="text-white text-[16px] max-sm:text-[15px] lg:text-[20px] font-bold whitespace-nowrap">
@@ -90,7 +105,6 @@ export default function NavBar({ onSearch }: NavBarProps) {
           >
             TV shows
           </NavLink>
-          
         </div>
       </div>
 
