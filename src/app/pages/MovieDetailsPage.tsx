@@ -6,6 +6,8 @@ import { useMovieDetails } from "@/hooks/useMovieDetails";
 import { getImageUrl } from "@/api/tmdb";
 import { useMovieCredits } from "@/hooks/useMovieCredits";
 import { useMovieVideos } from "@/hooks/useMovieVideos";
+import Loader from "@/components/Loader";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type MovieDetails = {
   runtime: string;
@@ -65,8 +67,8 @@ export default function MovieDetailsPage() {
 
   if (isLoading || !data) {
     return (
-      <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-        Loading...
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader />
       </div>
     );
   }
@@ -241,27 +243,30 @@ export default function MovieDetailsPage() {
                   Cast & Crew
                 </h2>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {credits?.cast?.slice(0, 8).map((person) => (
-                    <div key={person.id}>
-                      <div className="mx-auto w-55 h-55 rounded-[6px] overflow-hidden border border-white/10 mb-3">
-                        <img
-                          src={
-                            person.profile_path
-                              ? getImageUrl(person.profile_path)
-                              : "https://via.placeholder.com/300x300?text=No+Image"
-                          }
-                          alt={person.name}
-                          className="w-full h-full object-cover"
-                        />
+                <ScrollArea className="pb-4">
+                  <div className="flex gap-6">
+                    {credits?.cast?.map((person) => (
+                      <div key={person.id}>
+                        <div className="mx-auto w-30 h-35 rounded-[6px] overflow-hidden border border-white/10 mb-3">
+                          <img
+                            src={
+                              person.profile_path
+                                ? getImageUrl(person.profile_path)
+                                : "https://via.placeholder.com/300x300?text=No+Image"
+                            }
+                            alt={person.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <p className="font-bold text-sm">{person.name}</p>
+                        <p className="text-xs text-[#64748B]">
+                          {person.character ?? "Unknown Role"}
+                        </p>
                       </div>
-                      <p className="font-bold text-sm">{person.name}</p>
-                      <p className="text-xs text-[#64748B]">
-                        {person.character ?? "Unknown Role"}
-                      </p>
-                    </div>
-                  ))}{" "}
-                </div>
+                    ))}{" "}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               </div>
             </div>
 
@@ -354,35 +359,36 @@ export default function MovieDetailsPage() {
           </div>
         </div>
       </div>
-{isTrailerOpen && trailer && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-    onClick={() => setIsTrailerOpen(false)} 
-  >
-    <div
-      className="relative w-[90%] max-w-4xl aspect-video bg-black rounded-xl overflow-hidden"
-      onClick={(event) => event.stopPropagation()} 
-    >
-      {/* CLOSE BUTTON */}
-      <button
-        onClick={() => setIsTrailerOpen(false)}
-        className="absolute top-3 right-3 text-white text-xl z-10"
-      >
-        ✕
-      </button>
+      {isTrailerOpen && trailer && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+          onClick={() => setIsTrailerOpen(false)}
+        >
+          <div
+            className="relative w-[90%] max-w-4xl aspect-video bg-black rounded-xl overflow-hidden"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {/* CLOSE BUTTON */}
+            <button
+              onClick={() => setIsTrailerOpen(false)}
+              className="absolute top-3 right-3 text-white text-xl z-10"
+            >
+              ✕
+            </button>
 
-      {/* YOUTUBE PLAYER */}
-      <iframe
-        width="100%"
-        height="100%"
-        src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
-        title="Trailer"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-        className="w-full h-full"
-      />
+            {/* YOUTUBE PLAYER */}
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
+              title="Trailer"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}{" "}
     </div>
-  </div>
-)}    </div>
   );
 }
