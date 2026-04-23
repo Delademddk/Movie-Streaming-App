@@ -54,8 +54,11 @@ export type DiscoverParams = {
 export type MovieDetailsResponse =
   paths["/3/movie/{movie_id}"]["get"]["responses"]["200"]["content"]["application/json"];
 
-  export type MovieCreditsResponse =
+export type MovieCreditsResponse =
   paths["/3/movie/{movie_id}/credits"]["get"]["responses"]["200"]["content"]["application/json"];
+
+export type MovieVideosResponse =
+  paths["/3/movie/{movie_id}/videos"]["get"]["responses"]["200"]["content"]["application/json"];
 
 export function getPopularMovies(page = 1) {
   return fetchFromTMDB<PopularMoviesResponse>(`/3/movie/popular?page=${page}`);
@@ -115,16 +118,15 @@ export function getTrendingMovies() {
 }
 
 export function getMovieDetails(id: number) {
-  return fetchFromTMDB<MovieDetailsResponse>(
-    `/3/movie/${id}`
-  );
+  return fetchFromTMDB<MovieDetailsResponse>(`/3/movie/${id}`);
 }
 
-
 export function getMovieCredits(id: number) {
-  return fetchFromTMDB<MovieCreditsResponse>(
-    `/3/movie/${id}/credits`
-  );
+  return fetchFromTMDB<MovieCreditsResponse>(`/3/movie/${id}/credits`);
+}
+
+export function getMovieVideos(id: number) {
+  return fetchFromTMDB<MovieVideosResponse>(`/3/movie/${id}/videos`);
 }
 
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";

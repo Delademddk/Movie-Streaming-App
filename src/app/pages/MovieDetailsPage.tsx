@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Play, Plus, Star } from "lucide-react";
 import Button from "@/components/Button";
 import { useMovieDetails } from "@/hooks/useMovieDetails";
 import { getImageUrl } from "@/api/tmdb";
 import { useMovieCredits } from "@/hooks/useMovieCredits";
+import { useMovieVideos } from "@/hooks/useMovieVideos";
 
 type MovieDetails = {
   runtime: string;
@@ -27,12 +29,14 @@ const fallbackDetails: MovieDetails = {
 };
 
 export default function MovieDetailsPage() {
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
   const isValidMovieId = Number.isInteger(movieId) && movieId > 0;
 
   const { data, isLoading } = useMovieDetails(movieId);
   const { data: credits } = useMovieCredits(movieId);
+  const { data: videos } = useMovieVideos(movieId);
 
   if (!isValidMovieId || (!isLoading && !data)) {
     return (
@@ -100,6 +104,10 @@ export default function MovieDetailsPage() {
     : "https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg";
 
   const genreLabel = movie.genre || "Unknown";
+
+  const trailer = videos?.results?.find(
+    (vid) => vid.type === "Trailer" && vid.site === "YouTube",
+  );
 
   return (
     <div>
@@ -175,7 +183,7 @@ export default function MovieDetailsPage() {
                     text={
                       <>
                         <Plus className="mr-2 inline w-4 h-4" />
-                        Details
+                        Add to List
                       </>
                     }
                     className="bg-white/10 hover:bg-white/20 hover:ring-1 hover:ring-white/30"
@@ -218,7 +226,10 @@ export default function MovieDetailsPage() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-2xl">
+                    <button
+                      onClick={() => setIsTrailerOpen(true)}
+                      className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-2xl"
+                    >
                       <Play className="w-7 h-7 text-white ml-1" />
                     </button>
                   </div>
@@ -343,6 +354,35 @@ export default function MovieDetailsPage() {
           </div>
         </div>
       </div>
+{isTrailerOpen && trailer && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+    onClick={() => setIsTrailerOpen(false)} 
+  >
+    <div
+      className="relative w-[90%] max-w-4xl aspect-video bg-black rounded-xl overflow-hidden"
+      onClick={(event) => event.stopPropagation()} 
+    >
+      {/* CLOSE BUTTON */}
+      <button
+        onClick={() => setIsTrailerOpen(false)}
+        className="absolute top-3 right-3 text-white text-xl z-10"
+      >
+        ✕
+      </button>
+
+      {/* YOUTUBE PLAYER */}
+      <iframe
+        width="100%"
+        height="100%"
+        src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
+        title="Trailer"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        className="w-full h-full"
+      />
     </div>
+  </div>
+)}    </div>
   );
 }
