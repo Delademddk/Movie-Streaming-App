@@ -51,6 +51,9 @@ export type DiscoverParams = {
     | "release_date.asc";
 };
 
+export type MovieDetailsResponse =
+  paths["/3/movie/{movie_id}"]["get"]["responses"]["200"]["content"]["application/json"];
+
 export function getPopularMovies(page = 1) {
   return fetchFromTMDB<PopularMoviesResponse>(`/3/movie/popular?page=${page}`);
 }
@@ -106,6 +109,12 @@ export function searchTV(query: string, page = 1) {
 
 export function getTrendingMovies() {
   return fetchFromTMDB<TrendingMoviesResponse>("/3/trending/movie/day");
+}
+
+export function getMovieDetails(id: number) {
+  return fetchFromTMDB<MovieDetailsResponse>(
+    `/3/movie/${id}`
+  );
 }
 
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
