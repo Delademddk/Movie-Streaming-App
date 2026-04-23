@@ -1,14 +1,21 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Play, Plus, Star } from "lucide-react";
 import Button from "@/components/Button";
-import {
-  castAndCrew,
-  detailedMovies,
-  mockMovies,
-  popularMovies,
-} from "@/data/mockMovies";
+import { useMovieDetails } from "@/hooks/useMovieDetails";
+import { getImageUrl } from "@/api/tmdb";
+import { useMovieCredits } from "@/hooks/useMovieCredits";
+import { useMovieVideos } from "@/hooks/useMovieVideos";
 
-type MovieDetails = (typeof detailedMovies)[number];
+type MovieDetails = {
+  runtime: string;
+  overview: string;
+  budget: string;
+  revenue: string;
+  language: string;
+  status: string;
+  cast: any[];
+};
 
 const fallbackDetails: MovieDetails = {
   runtime: "Unknown",
@@ -22,16 +29,16 @@ const fallbackDetails: MovieDetails = {
 };
 
 export default function MovieDetailsPage() {
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
   const isValidMovieId = Number.isInteger(movieId) && movieId > 0;
 
-  const movie = isValidMovieId
-    ? (mockMovies.find((m) => m.id === movieId) ??
-      popularMovies.find((m) => m.id === movieId))
-    : undefined;
+  const { data, isLoading } = useMovieDetails(movieId);
+  const { data: credits } = useMovieCredits(movieId);
+  const { data: videos } = useMovieVideos(movieId);
 
-  if (!movie) {
+  if (!isValidMovieId || (!isLoading && !data)) {
     return (
       <div className="min-h-screen bg-zinc-950 text-white pb-12">
         <div className="relative h-96 bg-linear-to-b from-black/90 to-zinc-950">
@@ -48,7 +55,7 @@ export default function MovieDetailsPage() {
               Movie Not Found
             </h1>
             <p className="text-zinc-300 leading-relaxed text-[15.5px]">
-              The requested movie could not be found in the current mock data.
+              The requested movie could not be found.
             </p>
           </div>
         </div>
@@ -56,14 +63,51 @@ export default function MovieDetailsPage() {
     );
   }
 
-  const details = detailedMovies[movieId] ?? fallbackDetails;
+  if (isLoading || !data) {
+    return (
+      <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  const movie = {
+    id: data.id,
+    title: data.title ?? "Untitled",
+    poster_path: data.poster_path,
+    backdrop_path: data.backdrop_path,
+    vote_average: data.vote_average ?? 0,
+    release_date: data.release_date,
+    genre: data.genres?.[0]?.name ?? "Unknown",
+  };
+
+  const details: MovieDetails = {
+    runtime: data.runtime ? `${data.runtime} min` : "Unknown",
+    overview: data.overview ?? fallbackDetails.overview,
+    budget: data.budget ? `$${data.budget.toLocaleString()}` : "Unknown",
+    revenue: data.revenue ? `$${data.revenue.toLocaleString()}` : "Unknown",
+    language: data.original_language?.toUpperCase() ?? "Unknown",
+    status: data.status ?? "Unknown",
+    cast: [],
+  };
+
   const releaseYear = movie.release_date
     ? movie.release_date.split("-")[0]
     : "Unknown";
+
   const posterSrc = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    ? getImageUrl(movie.poster_path)
     : "https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg";
+
+  const backdropSrc = movie.backdrop_path
+    ? getImageUrl(movie.backdrop_path)
+    : "https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg";
+
   const genreLabel = movie.genre || "Unknown";
+
+  const trailer = videos?.results?.find(
+    (vid) => vid.type === "Trailer" && vid.site === "YouTube",
+  );
 
   return (
     <div>
@@ -71,7 +115,7 @@ export default function MovieDetailsPage() {
         <div className="relative h-170 flex items-end overflow-hidden">
           {/* Background Image */}
           <img
-            src="https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
+            src={backdropSrc}
             alt="background"
             className="absolute inset-0 w-full h-full object-cover brightness-75"
           />
@@ -139,7 +183,7 @@ export default function MovieDetailsPage() {
                     text={
                       <>
                         <Plus className="mr-2 inline w-4 h-4" />
-                        Details
+                        Add to List
                       </>
                     }
                     className="bg-white/10 hover:bg-white/20 hover:ring-1 hover:ring-white/30"
@@ -177,12 +221,15 @@ export default function MovieDetailsPage() {
 
                 <div className="relative rounded-[8px] overflow-hidden border border-white/10 aspect-video">
                   <img
-                    src="https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
+                    src={backdropSrc}
                     alt="Official Trailer"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-2xl">
+                    <button
+                      onClick={() => setIsTrailerOpen(true)}
+                      className="w-20 h-20 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-2xl"
+                    >
                       <Play className="w-7 h-7 text-white ml-1" />
                     </button>
                   </div>
@@ -190,32 +237,36 @@ export default function MovieDetailsPage() {
               </div>
 
               <div>
-                <div>
-                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 border-l-4 pl-4 border-[#0D59F2]">
-                    Cast & Crew
-                  </h2>
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 border-l-4 pl-4 border-[#0D59F2]">
+                  Cast & Crew
+                </h2>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {castAndCrew.map((person) => (
-                      <div key={person.id}>
-                        <div className="mx-auto w-55 h-55 rounded-[6px] overflow-hidden border border-white/10 mb-3">
-                          <img
-                            src={person.image}
-                            alt={person.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <p className="font-bold text-sm">{person.name}</p>
-                        <p className="text-xs text-[#64748B]">{person.role}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {credits?.cast?.slice(0, 8).map((person) => (
+                    <div key={person.id}>
+                      <div className="mx-auto w-55 h-55 rounded-[6px] overflow-hidden border border-white/10 mb-3">
+                        <img
+                          src={
+                            person.profile_path
+                              ? getImageUrl(person.profile_path)
+                              : "https://via.placeholder.com/300x300?text=No+Image"
+                          }
+                          alt={person.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                    ))}
-                  </div>
+                      <p className="font-bold text-sm">{person.name}</p>
+                      <p className="text-xs text-[#64748B]">
+                        {person.character ?? "Unknown Role"}
+                      </p>
+                    </div>
+                  ))}{" "}
                 </div>
               </div>
             </div>
 
             <div className="lg:col-span-4 flex flex-col">
-              <div className="bg-none border border-white/10 rounded-3xl p-6  ">
+              <div className="bg-none border border-white/10 rounded-3xl p-6">
                 <h3 className="text-xl font-semibold mb-6">Movie Info</h3>
 
                 <div className="space-y-6">
@@ -288,6 +339,7 @@ export default function MovieDetailsPage() {
                   </div>
                 </div>
               </div>
+
               <div className="mt-10 bg-blue-600 rounded-3xl p-6 text-center">
                 <p className="font-medium mb-3">Want to see more?</p>
                 <p className="text-sm text-blue-100 mb-6">
@@ -302,6 +354,35 @@ export default function MovieDetailsPage() {
           </div>
         </div>
       </div>
+{isTrailerOpen && trailer && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+    onClick={() => setIsTrailerOpen(false)} 
+  >
+    <div
+      className="relative w-[90%] max-w-4xl aspect-video bg-black rounded-xl overflow-hidden"
+      onClick={(event) => event.stopPropagation()} 
+    >
+      {/* CLOSE BUTTON */}
+      <button
+        onClick={() => setIsTrailerOpen(false)}
+        className="absolute top-3 right-3 text-white text-xl z-10"
+      >
+        ✕
+      </button>
+
+      {/* YOUTUBE PLAYER */}
+      <iframe
+        width="100%"
+        height="100%"
+        src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
+        title="Trailer"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        className="w-full h-full"
+      />
     </div>
+  </div>
+)}    </div>
   );
 }
