@@ -3,6 +3,8 @@ import { Play, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import Button from "./Button";
 import { useTrendingMovies } from "@/hooks/useTrendingMovies";
 import { getImageUrl } from "@/api/tmdb";
+import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 
 type Movie = {
   id: number;
@@ -13,11 +15,12 @@ type Movie = {
 
 export default function HeroBanner() {
   const { data, isLoading } = useTrendingMovies();
+  const navigate = useNavigate();
 
   const movies: Movie[] =
     data?.results
-      ?.filter((movie) => movie.backdrop_path) 
-      ?.slice(2, 8) 
+      ?.filter((movie) => movie.backdrop_path)
+      ?.slice(2, 8)
       ?.map((movie) => ({
         id: movie.id,
         title: movie.title ?? "Untitled",
@@ -47,10 +50,19 @@ export default function HeroBanner() {
     setCurrentIndex((prev) => (prev + 1) % movies.length);
   };
 
+  // ✅ CURRENT MOVIE
+  const currentMovie = movies[currentIndex];
+
+  // ✅ NAVIGATION HANDLER
+  const goToDetails = () => {
+    if (!currentMovie) return;
+    navigate(`/movie/${currentMovie.id}`);
+  };
+
   if (isLoading || movies.length === 0) {
     return (
-      <section className="relative w-full h-[75vh] rounded-[14px] bg-[#1E293B] flex items-center justify-center mb-4">
-        <p className="text-white text-sm">Loading trending movies...</p>
+      <section className="relative w-full h-[75vh] rounded-[14px] bg-[#101622] flex items-center justify-center mb-4">
+        <Loader />
       </section>
     );
   }
@@ -75,16 +87,16 @@ export default function HeroBanner() {
       <div className="relative z-10 w-full px-6 md:px-18 pb-12 max-w-screen-2xl mx-auto flex items-end justify-between">
         <div className="max-w-xl">
           <h1 className="text-white text-3xl md:text-6xl font-extrabold mb-4 leading-tight">
-            {movies[currentIndex].title}
+            {currentMovie.title}
           </h1>
 
           <p className="text-[#CBD5E1] text-sm md:text-[18px] mb-6 line-clamp-3">
-            {movies[currentIndex].overview}
+            {currentMovie.overview}
           </p>
 
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => {}}
+              onClick={goToDetails}
               text={
                 <>
                   <Play className="mr-2 inline w-4 h-4" />
@@ -94,7 +106,7 @@ export default function HeroBanner() {
               className="bg-[#0D59F2] transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(13,89,242,0.6)]"
             />
             <Button
-              onClick={() => {}}
+              onClick={goToDetails}
               text={
                 <>
                   <Info className="mr-2 inline w-4 h-4" />
