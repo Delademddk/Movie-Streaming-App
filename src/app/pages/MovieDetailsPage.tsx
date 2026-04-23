@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { Play, Plus, Star } from "lucide-react";
 import Button from "@/components/Button";
-import { castAndCrew } from "@/data/mockMovies";
 import { useMovieDetails } from "@/hooks/useMovieDetails";
 import { getImageUrl } from "@/api/tmdb";
+import { useMovieCredits } from "@/hooks/useMovieCredits";
 
 type MovieDetails = {
   runtime: string;
@@ -32,6 +32,7 @@ export default function MovieDetailsPage() {
   const isValidMovieId = Number.isInteger(movieId) && movieId > 0;
 
   const { data, isLoading } = useMovieDetails(movieId);
+  const { data: credits } = useMovieCredits(movieId);
 
   if (!isValidMovieId || (!isLoading && !data)) {
     return (
@@ -66,9 +67,6 @@ export default function MovieDetailsPage() {
     );
   }
 
-  // =============================
-  // 🔹 MAP API DATA → OLD STRUCTURE
-  // =============================
   const movie = {
     id: data.id,
     title: data.title ?? "Untitled",
@@ -233,21 +231,25 @@ export default function MovieDetailsPage() {
                 </h2>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {castAndCrew.map((person) => (
+                  {credits?.cast?.slice(0, 8).map((person) => (
                     <div key={person.id}>
                       <div className="mx-auto w-55 h-55 rounded-[6px] overflow-hidden border border-white/10 mb-3">
                         <img
-                          src={person.image}
+                          src={
+                            person.profile_path
+                              ? getImageUrl(person.profile_path)
+                              : "https://via.placeholder.com/300x300?text=No+Image"
+                          }
                           alt={person.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <p className="font-bold text-sm">{person.name}</p>
                       <p className="text-xs text-[#64748B]">
-                        {person.role}
+                        {person.character ?? "Unknown Role"}
                       </p>
                     </div>
-                  ))}
+                  ))}{" "}
                 </div>
               </div>
             </div>
@@ -304,10 +306,10 @@ export default function MovieDetailsPage() {
                                   star === 5
                                     ? "80%"
                                     : star === 4
-                                    ? "12%"
-                                    : star === 3
-                                    ? "5%"
-                                    : "2%",
+                                      ? "12%"
+                                      : star === 3
+                                        ? "5%"
+                                        : "2%",
                               }}
                             />
                           </div>
@@ -315,10 +317,10 @@ export default function MovieDetailsPage() {
                             {star === 5
                               ? "80%"
                               : star === 4
-                              ? "12%"
-                              : star === 3
-                              ? "5%"
-                              : "2%"}
+                                ? "12%"
+                                : star === 3
+                                  ? "5%"
+                                  : "2%"}
                           </span>
                         </div>
                       ))}

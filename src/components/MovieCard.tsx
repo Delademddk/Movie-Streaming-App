@@ -30,6 +30,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
     12: "Adventure",
     80: "Crime",
     53: "Thriller",
+    16: "Animation",
   };
 
   const genreName =
