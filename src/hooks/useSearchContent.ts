@@ -33,6 +33,6 @@ export function useSearchContent({
 
     enabled: query.length > 0,
 
-    placeholderData: keepPreviousData,
+    placeholderData: query.length > 0 ? keepPreviousData : undefined,
   });
 }

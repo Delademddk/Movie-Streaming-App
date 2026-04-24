@@ -1,51 +1,37 @@
-import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import FilterSidebar from "@/components/FilterSidebar";
 import MovieCard from "@/components/MovieCard";
 import Pagination from "@/components/Pagination";
-
 import { useSearchContent } from "@/hooks/useSearchContent";
-import { useDebounce } from "@/hooks/useDebounce";
 
 type SearchType = "movie" | "tv";
 
+type SearchResult = {
+  id: number;
+  title?: string;
+  name?: string;
+  poster_path?: string | null;
+  vote_average: number;
+  release_date?: string;
+  first_air_date?: string;
+  genre_ids?: number[];
+};
+
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const query = searchParams.get("q") ?? "";
+  const query = searchParams.get("query") ?? "";
   const type = (searchParams.get("type") as SearchType) || "movie";
   const page = Number(searchParams.get("page") ?? "1");
-
   const genresParam = searchParams.get("genres");
   const yearParam = searchParams.get("year");
   const ratingParam = searchParams.get("rating");
-
-  const [inputValue, setInputValue] = useState(query);
-
-  useEffect(() => {
-    setInputValue(query);
-  }, [query]);
-
-  const debouncedQuery = useDebounce(inputValue, 400);
-
-  useEffect(() => {
-    if (debouncedQuery !== query) {
-      setSearchParams({
-        q: debouncedQuery,
-        type,
-        page: "1",
-      });
-    }
-  }, [debouncedQuery, query, type, setSearchParams]);
-
   const { data, isLoading, isFetching } = useSearchContent({
     query,
     type,
     page,
   });
 
-  const results = data?.results ?? [];
+  const results = (data?.results ?? []) as SearchResult[];
   const totalPages = data?.total_pages ?? 1;
 
   const GENRE_MAP: Record<string, number> = {
@@ -61,7 +47,7 @@ export default function SearchPage() {
       .map((genre) => GENRE_MAP[genre])
       .filter(Boolean) || [];
 
-  const filteredResults = results.filter((item: any) => {
+  const filteredResults = results.filter((item) => {
     if (ratingParam && !isNaN(Number(ratingParam))) {
       if (item.vote_average < Number(ratingParam)) return false;
     }
@@ -78,10 +64,11 @@ export default function SearchPage() {
     }
 
     if (selectedGenreIds.length > 0) {
-      if (!item.genre_ids) return false;
+      const genreIds = item.genre_ids;
+      if (!genreIds) return false;
 
       const matchesGenre = selectedGenreIds.some((id) =>
-        item.genre_ids.includes(id)
+        genreIds.includes(id)
       );
 
       if (!matchesGenre) return false;
@@ -92,7 +79,7 @@ export default function SearchPage() {
 
   const handleTypeChange = (newType: SearchType) => {
     setSearchParams({
-      q: query,
+      query,
       type: newType,
       page: "1",
     });
@@ -100,7 +87,7 @@ export default function SearchPage() {
 
   const handlePageChange = (newPage: number) => {
     setSearchParams({
-      q: query,
+      query,
       type,
       page: String(newPage),
     });
@@ -125,7 +112,7 @@ export default function SearchPage() {
             <h1 className="text-4xl font-bold">
               Results for{" "}
               <span className="text-[#0D59F2]">
-                "{query || "your search"}"
+                "{query}"
               </span>
             </h1>
 
@@ -157,7 +144,7 @@ export default function SearchPage() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-6">
-          {filteredResults.map((item: any) => (
+          {filteredResults.map((item) => (
             <MovieCard
               key={item.id}
               movie={{

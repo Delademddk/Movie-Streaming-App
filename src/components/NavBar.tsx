@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Menu, Search } from "lucide-react";
-import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/useDebounce";
 import Logo from "../assets/Logo.svg";
 import UserAvatar from "./UserAvatar";
 import {
@@ -9,31 +11,61 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useState, useEffect } from "react";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryFromUrl =
+    new URLSearchParams(location.search).get("query") || "";
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(queryFromUrl);
+  const debouncedSearchValue = useDebounce(searchValue, 400);
+  const isSearchPage = location.pathname === "/search";
 
-  // ✅ Sync input with URL
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const query = params.get("q") || "";
-    setSearchValue(query);
-  }, [location.search]);
+    setSearchValue((currentSearchValue) =>
+      queryFromUrl === currentSearchValue ? currentSearchValue : queryFromUrl
+    );
+  }, [queryFromUrl]);
 
-  // ✅ Handle search
+  useEffect(() => {
+    if (!isSearchPage) return;
+
+    const params = new URLSearchParams(location.search);
+    const currentQuery = queryFromUrl;
+    const nextQuery = debouncedSearchValue.trim();
+
+    if (nextQuery === "") {
+      if (currentQuery === "" && debouncedSearchValue === "") return;
+
+      navigate("/search?query=&type=movie&page=1", { replace: true });
+      return;
+    }
+
+    if (nextQuery === currentQuery) return;
+
+    params.delete("q");
+    params.set("query", nextQuery);
+    params.set("type", params.get("type") ?? "movie");
+    params.set("page", "1");
+
+    navigate(`/search?${params.toString()}`, { replace: true });
+  }, [debouncedSearchValue, isSearchPage, navigate]);
+
   const handleSearch = () => {
     const trimmed = searchValue.trim();
-    if (!trimmed) return;
 
-    navigate(`/search?q=${trimmed}&type=movie&page=1`);
+    navigate(
+      `/search?query=${encodeURIComponent(trimmed)}&type=movie&page=1`
+    );
+  };
+
+  const handleSearchValueChange = (value: string) => {
+    setSearchValue(value);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isSearchPage) {
       handleSearch();
     }
   };
@@ -114,7 +146,7 @@ export default function NavBar() {
             <Search className="absolute left-2 top-2.5 h-3.5 w-3.5 lg:h-4.5 lg:w-4.5 text-gray-500" />
             <Input
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) => handleSearchValueChange(e.target.value)}
               onKeyDown={handleKeyDown}
               className="pl-7 md:pl-8 rounded-[8px] w-[clamp(140px,32vw,448px)] bg-[#2B3444] border-[#2B3444] border-2 focus-visible:border-[#0C8CE9] text-xs md:text-sm"
               placeholder="Search movies..."
@@ -138,7 +170,7 @@ export default function NavBar() {
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
                   <Input
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => handleSearchValueChange(e.target.value)}
                     onKeyDown={handleKeyDown}
                     autoFocus
                     className="pl-8 w-full rounded-[8px] bg-[#2B3444]/90 border-[#2B3444]/90 border-2 focus-visible:border-[#0C8CE9] text-sm"
