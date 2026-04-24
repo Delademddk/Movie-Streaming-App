@@ -60,6 +60,9 @@ export type MovieCreditsResponse =
 export type MovieVideosResponse =
   paths["/3/movie/{movie_id}/videos"]["get"]["responses"]["200"]["content"]["application/json"];
 
+export type DiscoverTVResponse =
+  paths["/3/discover/tv"]["get"]["responses"]["200"]["content"]["application/json"];
+
 export function getPopularMovies(page = 1) {
   return fetchFromTMDB<PopularMoviesResponse>(`/3/movie/popular?page=${page}`);
 }
@@ -127,6 +130,33 @@ export function getMovieCredits(id: number) {
 
 export function getMovieVideos(id: number) {
   return fetchFromTMDB<MovieVideosResponse>(`/3/movie/${id}/videos`);
+}
+
+export function discoverTV({
+  page = 1,
+  genre,
+  minRating,
+  year,
+  sortBy = "popularity.desc",
+}: {
+  page?: number;
+  genre?: number;
+  minRating?: number;
+  year?: number;
+  sortBy?: string;
+}) {
+  const query = new URLSearchParams({
+    page: String(page),
+    sort_by: sortBy,
+  });
+
+  if (genre) query.append("with_genres", String(genre));
+  if (minRating) query.append("vote_average.gte", String(minRating));
+  if (year) query.append("first_air_date_year", String(year));
+
+  return fetchFromTMDB<DiscoverTVResponse>(
+    `/3/discover/tv?${query.toString()}`,
+  );
 }
 
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
