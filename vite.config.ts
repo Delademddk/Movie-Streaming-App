@@ -5,6 +5,9 @@ import path from "path"
 
 export default defineConfig({
   plugins: [react(),tailwindcss(),],
+  server: {
+    allowedHosts: true // This allows any host, including any ngrok URL
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

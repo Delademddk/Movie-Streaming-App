@@ -18,7 +18,7 @@ export default function FilterSidebar() {
   // =============================
   // 🔹 READ FROM URL
   // =============================
-  const query = searchParams.get("q") ?? "";
+  const query = searchParams.get("query") ?? "";
   const type = searchParams.get("type") ?? "movie";
 
   const urlGenres = searchParams.get("genres")?.split(",") || [];
@@ -55,7 +55,7 @@ export default function FilterSidebar() {
 
   const handleApply = () => {
     setSearchParams({
-      q: query,
+      query,
       type,
       page: "1",
       genres: selectedGenres.join(","),
@@ -70,7 +70,7 @@ export default function FilterSidebar() {
     setMinRating([0]);
 
     setSearchParams({
-      q: query,
+      query,
       type,
       page: "1",
     });

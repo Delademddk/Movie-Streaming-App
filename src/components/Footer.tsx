@@ -22,6 +22,9 @@ const Footer = () => {
       </div>
 
       <div className="flex items-center gap-3">
+        <p className='text-slate-400'>
+          Powered by TMDb
+        </p>
         <button 
           className="p-2.5 rounded-full bg-slate-800/80 hover:bg-slate-700 transition-colors text-slate-300"
           aria-label="Website"
