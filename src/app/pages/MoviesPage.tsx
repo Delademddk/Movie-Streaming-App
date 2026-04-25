@@ -83,7 +83,6 @@ export default function MoviesPage() {
         <FilterBar onFiltersChange={setFilters} />
       </div>
 
-      {/* ERROR */}
       {isError && (
         <p className="text-red-400 mb-4">
           {(error as Error).message}

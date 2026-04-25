@@ -42,6 +42,7 @@ export default function MovieDetailsPage() {
 
   if (!isValidMovieId || (!isLoading && !data)) {
     return (
+      // I have to change the error UI here
       <div className="min-h-screen bg-zinc-950 text-white pb-12">
         <div className="relative h-96 bg-linear-to-b from-black/90 to-zinc-950">
           <img
