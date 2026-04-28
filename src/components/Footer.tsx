@@ -2,14 +2,14 @@ import { Clapperboard, Globe, MonitorPlay } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-[#0F1626] text-slate-400 py-13 px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between text-sm">
+    <footer className="w-full bg-[#0F1626] text-slate-400 py-13 px-6 lg:px-8 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 md:justify-between text-sm">
       
-      <div className="flex items-center gap-2 ">
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-2 ">
         <Clapperboard className="w-5 h-5 text-[#64748B] text-sm" />
         <span>&copy; 2024 MovieExplorer. All rights reserved.</span>
       </div>
 
-      <div className="flex items-center gap-6 ">
+      <div className="flex flex-col md:flex-row md:items-center gap-6 ">
         <a href="#privacy" className="hover:text-slate-200 transition-colors">
           Privacy Policy
         </a>

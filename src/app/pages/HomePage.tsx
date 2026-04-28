@@ -72,26 +72,27 @@ export default function HomePage() {
   };
 
   return (
-    <div className="p-4 ">
+    <div className="p-2 md:p-4">
       <HeroBanner />
 
       <FilterBar onFiltersChange={setFilters} />
 
-      <div className="px-8 py-6 max-w-screen-2xl mx-auto">
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-semibold text-white">
+      <div className="px-3 py-3 md:px-6 md:py-5 lg:px-8 lg:py-6 max-w-screen-2xl mx-auto">
+        <div className="mb-[clamp(1.5rem,4vw,3rem)]">
+          <div className="flex items-center justify-between mb-[clamp(0.75rem,2vw,1rem)]">
+            <h2 className="text-white font-semibold text-[clamp(1rem,2.5vw,1.5rem)]">
               Popular Movies
             </h2>
             <a
               href="#"
-              className="text-blue-400 hover:underline flex items-center gap-1 text-sm"
+              className="text-blue-400 hover:underline flex items-center gap-1 text-[clamp(0.65rem,1.2vw,0.875rem)]"
             >
               View All
             </a>
           </div>
-          <ScrollArea className=" pb-4">
-            <div className="flex gap-6  ">
+
+          <ScrollArea className="pb-4">
+            <div className="flex gap-[clamp(0.75rem,2vw,1.5rem)]">
               {popularLoading && <Loader />}
               {popularError && (
                 <p className="text-sm text-red-400">
@@ -100,12 +101,15 @@ export default function HomePage() {
               )}
 
               {popularData?.results?.map((movie) => (
-                <div key={movie.id} className="flex-none min-w-55">
+                <div
+                  key={movie.id}
+                  className="flex-none w-[clamp(7rem,18vw,13.75rem)]"
+                >
                   <MovieCard movie={movie} />
                 </div>
               ))}
             </div>
-            <ScrollBar className="-red-800" orientation="horizontal" />
+            <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </div>
 

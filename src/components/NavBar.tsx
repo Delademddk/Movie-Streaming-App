@@ -15,8 +15,7 @@ import {
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const queryFromUrl =
-    new URLSearchParams(location.search).get("query") || "";
+  const queryFromUrl = new URLSearchParams(location.search).get("query") || "";
 
   const [searchValue, setSearchValue] = useState(queryFromUrl);
   const debouncedSearchValue = useDebounce(searchValue, 400);
@@ -24,7 +23,7 @@ export default function NavBar() {
 
   useEffect(() => {
     setSearchValue((currentSearchValue) =>
-      queryFromUrl === currentSearchValue ? currentSearchValue : queryFromUrl
+      queryFromUrl === currentSearchValue ? currentSearchValue : queryFromUrl,
     );
   }, [queryFromUrl]);
 
@@ -55,9 +54,7 @@ export default function NavBar() {
   const handleSearch = () => {
     const trimmed = searchValue.trim();
 
-    navigate(
-      `/search?query=${encodeURIComponent(trimmed)}&type=movie&page=1`
-    );
+    navigate(`/search?query=${encodeURIComponent(trimmed)}&type=movie&page=1`);
   };
 
   const handleSearchValueChange = (value: string) => {
@@ -84,17 +81,41 @@ export default function NavBar() {
             align="end"
             sideOffset={8}
           >
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
-              Home
+            <DropdownMenuItem>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-500"
+                    : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+                }
+              >
+                Home
+              </NavLink>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
-              Movies
+            <DropdownMenuItem>
+              <NavLink
+                to="/movies"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-500"
+                    : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+                }
+              >
+                Movies
+              </NavLink>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
-              TV Shows
-            </DropdownMenuItem>
-            <DropdownMenuItem className="hover:text-[#0D59F2] cursor-pointer">
-              My List
+            <DropdownMenuItem>
+              <NavLink
+                to="/tv-shows"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-500"
+                    : "cursor-pointer hover:text-white transition-colors text-[#94A3B8]"
+                }
+              >
+                TV shows
+              </NavLink>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

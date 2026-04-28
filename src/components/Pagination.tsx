@@ -48,9 +48,9 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#1E293B] hover:bg-[#2B3444] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 border border-white/5"
+        className="w-8 md:w-10 h-8 md:h-10 flex items-center justify-center rounded-[10px] md:rounded-xl bg-[#1E293B] hover:bg-[#2B3444] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 border border-white/5"
       >
-        <ChevronLeft className="w-5 h-5 text-zinc-400" />
+        <ChevronLeft className="w-4 md:w-5 h-4 md:h-5 text-zinc-400" />
       </button>
 
       {/* Page Numbers & Ellipses */}
@@ -59,7 +59,7 @@ export default function Pagination({
           return (
             <div
               key={`ellipsis-${index}`}
-              className="w-10 h-10 flex items-center justify-center text-zinc-400 select-none"
+              className="w-8 md:w-10 h-8 md:h-10 flex items-center justify-center text-zinc-400 select-none"
             >
               ...
             </div>
@@ -71,7 +71,7 @@ export default function Pagination({
           <button
             key={`page-${item}`}
             onClick={() => onPageChange(item as number)}
-            className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-all active:scale-95 border ${
+            className={`w-8 md:w-10 h-8 md:h-10 flex items-center justify-center rounded-[10px] md:rounded-xl text-sm font-semibold transition-all active:scale-95 border ${
               item === currentPage
                 ? "bg-[#0D59F2] text-white border-transparent shadow-lg shadow-blue-500/20"
                 : "bg-[#1E293B] hover:bg-[#2B3444] text-zinc-300 border-white/5"

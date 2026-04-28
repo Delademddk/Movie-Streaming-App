@@ -94,29 +94,29 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 md:px-8 py-8 min-h-screen text-white flex flex-col lg:flex-row gap-8">
+    <div className="max-w-screen-2xl mx-auto px-4 md:px-8 md:py-8 min-h-screen text-white flex flex-col lg:flex-row gap-8">
       
       <div className="lg:fixed self-start w-full lg:w-auto shrink-0">
         <FilterSidebar />
       </div>
 
-      <div className="pt-6 pl-75 w-full">
+      <div className="md:pt-6 md:pl-75 w-full">
         <div>
-          <div className="flex items-center gap-2 text-sm text-[#94A3B8] mb-2">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-[#94A3B8] mb-2">
             <span>Home</span>
             <span>›</span>
             <span className="text-white">Search</span>
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold">
+          <div className="mb-4 md:mb-8">
+            <h1 className="text-[22px] md:text-4xl font-bold">
               Results for{" "}
               <span className="text-[#0D59F2]">
                 "{query}"
               </span>
             </h1>
 
-            <p className="text-[#94A3B8] text-[16px] mt-2">
+            <p className="text-[#94A3B8] text-[12px] md:text-[16px] mt-2">
               {isLoading
                 ? "Searching..."
                 : `Found ${filteredResults.length} results`}
@@ -132,7 +132,7 @@ export default function SearchPage() {
             <button
               key={tab.value}
               onClick={() => handleTypeChange(tab.value as SearchType)}
-              className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+              className={`px-6 py-4 text-xs md:text-sm font-medium border-b-2 transition-colors ${
                 type === tab.value
                   ? "border-blue-500 text-[#0D59F2]"
                   : "border-transparent text-[#94A3B8] hover:text-white"
