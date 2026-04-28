@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Play, Plus, Star } from "lucide-react";
 import Button from "@/components/Button";
 import { useMovieDetails } from "@/hooks/useMovieDetails";
@@ -31,6 +31,7 @@ const fallbackDetails: MovieDetails = {
 };
 
 export default function MovieDetailsPage() {
+  const navigate = useNavigate();
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
@@ -111,6 +112,7 @@ export default function MovieDetailsPage() {
     (vid) => vid.type === "Trailer" && vid.site === "YouTube",
   );
 
+
   return (
     <div>
       <div>
@@ -171,8 +173,8 @@ export default function MovieDetailsPage() {
                 {/* Buttons */}
                 <div className="flex items-center gap-4">
                   <Button
-                    onClick={() => {}}
-                    text={
+onClick={() => navigate(`/watch/${movieId}`)}               
+     text={
                       <>
                         <Play className="mr-2 inline w-3 md:w-4 h-3 md:h-4" />
                         Watch Now
