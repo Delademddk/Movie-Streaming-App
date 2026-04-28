@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import MovieDetailsPage from "./pages/MovieDetailsPage";
 import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
+import WatchPage from "./pages/WatchPage";
 
 export default function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/tv-shows" element={<TVShowsPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/movie/:id" element={<MovieDetailsPage />} />
+        <Route path="/watch/:id" element={<WatchPage />} />
       </Routes>
 
       {!isSearchPage && <Footer />}
