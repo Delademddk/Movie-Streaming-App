@@ -43,7 +43,7 @@ export default function Pagination({
   const items = getPaginationItems();
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8 border-t p-8 border-gray-500">
+    <div className="flex items-center justify-center gap-2 mt-8 border-t p-4 border-gray-500">
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
@@ -86,9 +86,9 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#1E293B] hover:bg-[#2B3444] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 border border-white/5"
+        className="w-8 md:w-10 h-8 md:h-10 flex items-center justify-center rounded-[10px] md:rounded-xl bg-[#1E293B] hover:bg-[#2B3444] disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 border border-white/5"
       >
-        <ChevronRight className="w-5 h-5 text-zinc-400" />
+        <ChevronRight className="w-4 md:w-5 h-4 md:h-5 text-zinc-400" />
       </button>
     </div>
   );

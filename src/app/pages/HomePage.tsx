@@ -7,6 +7,7 @@ import Pagination from "@/components/Pagination";
 import { usePopularMovies } from "@/hooks/usePopularMovies";
 import { useDiscoverMovies } from "@/hooks/useDiscoverMovies";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useNavigate } from "react-router-dom";
 
 type HomeFilters = {
   genre: string;
@@ -71,6 +72,8 @@ export default function HomePage() {
     setCurrentPage(page);
   };
 
+    const navigate = useNavigate();
+
   return (
     <div className="p-2 md:p-4">
       <HeroBanner />
@@ -83,12 +86,9 @@ export default function HomePage() {
             <h2 className="text-white font-semibold text-[clamp(1rem,2.5vw,1.5rem)]">
               Popular Movies
             </h2>
-            <a
-              href="#"
-              className="text-blue-400 hover:underline flex items-center gap-1 text-[clamp(0.65rem,1.2vw,0.875rem)]"
-            >
+            <button onClick={() => navigate("/movies")} className="text-blue-400 hover:underline flex items-center gap-1 text-[clamp(0.65rem,1.2vw,0.875rem)]">
               View All
-            </a>
+            </button>
           </div>
 
           <ScrollArea className="pb-4">
